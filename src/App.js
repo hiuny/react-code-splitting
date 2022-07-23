@@ -1,29 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
-import { Component } from 'react';
+import notify from './notify';
+import React, { Suspense, useState } from 'react';
+const SplitMe = React.lazy(() => import('./SplitMe'))
 
-class App extends Component {
-  state = {
-    SplitMe: null
+function App() {
+  const [visible, setVisible] = useState(false)
+  const onClick = () => {
+    setVisible(true)
   }
-  handleClick = async () => {
-    const loadedModuel = await import('./notify')
-    this.setState({
-      SplitMe: loadedModuel.default
-    })
-  }
-  render() {
-    const { SplitMe } = this.state
-    return (
-      <div className="App">
+  return (
+    <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p onClick={this.handleClick}>Hello React!!</p>
-        {SplitMe && <SplitMe />}
+        <p onClick={onClick}>Hello React!!</p>
+        <Suspense fallback={<div>loading...</div>}>
+          {visible && <SplitMe />}
+        </Suspense>
       </header>
     </div>
-    )
-  };
+  );
 }
 
 export default App;
